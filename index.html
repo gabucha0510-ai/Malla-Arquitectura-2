@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Curricular - Arquitectura USB</title>
+    <style>
+        :root {
+            --color-primary: #3498db;
+            --color-secondary: #2c3e50;
+            --color-approved: #2ecc71;
+            --color-pending: #f39c12;
+            --color-blocked: #e74c3c;
+            --color-background: #f5f7fa;
+            --color-card: #ffffff;
+            --color-tooltip: #34495e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--color-background);
+            color: var(--color-secondary);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--color-card);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--color-secondary);
+            font-size: 1.2rem;
+        }
+
+        .curriculum {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .year {
+            background-color: var(--color-card);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .year-title {
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        .trimesters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+        }
+
+        .trimester {
+            flex: 1;
+            min-width: 300px;
+            background-color: rgba(236, 240, 241, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .trimester-title {
+            color: var(--color-secondary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subject {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .subject-approved {
+            background-color: var(--color-approved);
+            color: white;
+        }
+
+        .subject-pending {
+            background-color: var(--color-pending);
+            color: white;
+        }
+
+        .subject-blocked {
+            background-color: var(--color-blocked);
+            color: white;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .subject-code {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .subject-name {
+            font-size: 0.9rem;
+        }
+
+        .subject-requisites {
+            font-size: 0.8rem;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--color-tooltip);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .subject-blocked:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: var(--color-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .trimesters {
+                flex-direction: column;
+            }
+            
+            .trimester {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Malla Curricular de Arquitectura</h1>
+        <p class="subtitle">Universidad Simón Bolívar</p>
+    </header>
+
+    <main class="curriculum" id="curriculum">
+        <!-- La malla curricular se generará dinámicamente con JavaScript -->
+    </main>
+
+    <footer>
+        <p>Haz clic en cada materia para marcarla como aprobada. Las materias bloqueadas requieren aprobar sus prerrequisitos.</p>
+    </footer>
+
+    <script>
+        // Estructura de datos de la malla curricular
+        const curriculumData = [
+            {
+                year: "Primer Año (ciclo básico)",
+                trimesters: [
+                    {
+                        name: "I trimestre",
+                        subjects: [
+                            { code: "DA1111", name: "Geometría Descriptiva I", requisites: [] },
+                            { code: "PL1510", name: "Arquitectura y Urbanismo", requisites: [] },
+                            { code: "MA1111", name: "Matemáticas I", requisites: [] },
+                            { code: "LLA111", name: "Lenguaje I", requisites: [] },
+                            { code: "CSA211", name: "Venezuela ante el siglo XXI I", requisites: [] }
+                        ]
+                    },
+                    {
+                        name: "II trimestre",
+                        subjects: [
+                            { code: "DA1112", name: "Geometría Descriptiva II", requisites: ["DA1111"] },
+                            { code: "FS1163", name: "Física Básica", requisites: ["MA1111"] },
+                            { code: "MA1112", name: "Matemáticas II", requisites: ["MA1111"] },
+                            { code: "LLA112", name: "Lenguaje II", requisites: ["LLA111"] },
+                            { code: "CSA212", name: "Venezuela ante el siglo XXI", requisites: ["CSA211"] }
+                        ]
+                    },
+                    {
+                        name: "III trimestre",
+                        subjects: [
+                            { code: "DA1113", name: "Dibujo y Perspectiva", requisites: ["DA1112"] },
+                            { code: "FS1117", name: "Física de las Estructuras", requisites: ["MA1112", "FS1163"] },
+                            { code: "MA1116", name: "Matemáticas III", requisites: ["MA1112"] },
+                            { code: "LLA113", name: "Lenguaje III", requisites: ["LLA112"] },
+                            { code: "CSA213", name: "Venezuela ante el siglo XXI", requisites: ["CSA212"] }
+                        ]
+                    }
+                ]
+            },
+            {
+                year: "Segundo Año",
+                trimesters: [
+                    {
+                        name: "IV trimestre",
+                        subjects: [
+                            { code: "DA1311", name: "Diseño Básico", requisites: ["DA1113", "MA1112"] },
+                            { code: "DA1211", name: "Apreciación Plástica y Expresión Gráfica I", requisites: ["DA1113"] },
+                            { code: "DA1411", name: "Introducción Teoría de la Arquitectura", requisites: ["PL1510"] },
+                            { code: "ID2124", name: "Inglés para Arquitectura y Urbanismo", requisites: ["40 Unidades aprob."] },
+                            { code: "DA2521", name: "Introducción al Diseño Estructural", requisites: ["MA1116", "FS1117"] }
+                        ]
+                    },
+                    {
+                        name: "V trimestre",
+                        subjects: [
+                            { code: "DA1312", name: "Diseño Arquitectónico I", requisites: ["DA1311", "FS1117"] },
+                            { code: "DA1212", name: "Apreciación Plástica y Expresión Gráfica II", requisites: ["DA1211"] },
+                            { code: "DA1412", name: "Teoría de la Arquitectura I", requisites: ["DA1411"] },
+                            { code: "ID2125", name: "Inglés para Arquitectura y Urbanismo II", requisites: ["ID2124"] },
+                            { code: "DA2522", name: "Diseño Estructural", requisites: ["MC3250", "DA1311"] }
+                        ]
+                    },
+                    {
+                        name: "VI trimestre",
+                        subjects: [
+                            { code: "DA1313", name: "Diseño Arquitectónico II", requisites: ["DA1312", "DA1411", "DA1211"] },
+                            { code: "DA2211", name: "Apreciación Plástica y Expresión Gráfica III", requisites: ["DA1212"] },
+                            { code: "DA2411", name: "Teoría de la Arquitectura II", requisites: ["DA1412", "DA1311"] },
+                            { code: "ID2126", name: "Inglés para Arquitectura y Urbanismo III", requisites: ["ID2125"] },
+                            { code: "DA2523", name: "Proyecto Estructural de Edificaciones", requisites: ["MC3252", "DA1312"] }
+                        ]
+                    }
+                ]
+            },
+            {
+                year: "Tercer Año",
+                trimesters: [
+                    {
+                        name: "VII trimestre",
+                        subjects: [
+                            { code: "DA1314", name: "Diseño Arquitectónico III", requisites: ["DA1313", "MA1116"] },
+                            { code: "DA2412", name: "Teoría de la Arquitectura III", requisites: ["DA2411"] },
+                            { code: "ID3124", name: "Inglés para Arquitectura y Urbanismo IV", requisites: ["ID2126"] },
+                            { code: "DA2541", name: "Arquitectura y Ambiente", requisites: ["DA1312"] },
+                            { code: "EG", name: "Estudios Generales", requisites: [] }
+                        ]
+                    },
+                    {
+                        name: "VIII trimestre",
+                        subjects: [
+                            { code: "DA2311", name: "Diseño Arquitectónico IV", requisites: ["DA1314"] },
+                            { code: "DA2413", name: "Teoría de la Arquitectura IV", requisites: ["DA2412"] },
+                            { code: "DA2511", name: "Elementos de la Construcción I", requisites: ["DA1312"] },
+                            { code: "DA2121", name: "Expresión Digital I", requisites: ["DA1311", "DA2211"] },
+                            { code: "EG", name: "Estudios Generales", requisites: [] }
+                        ]
+                    },
+                    {
+                        name: "IX trimestre",
+                        subjects: [
+                            { code: "DA2312", name: "Diseño Arquitectónico V", requisites: ["DA2311", "DA2412"] },
+                            { code: "DA3411", name: "Teoría de la Arquitectura V", requisites: ["DA2413"] },
+                            { code: "DA2512", name: "Elementos de la Construcción II", requisites: ["DA2511"] },
+                            { code: "DA2122", name: "Expresión Digital II", requisites: ["DA2121"] },
+                            { code: "EG", name: "Estudios Generales", requisites: [] }
+                        ]
+                    }
+                ]
+            },
+            {
+                year: "Cuarto Año",
+                trimesters: [
+                    {
+                        name: "X trimestre",
+                        subjects: [
+                            { code: "DA2313", name: "Diseño Arquitectónico VI", requisites: ["DA2312", "DA2122"] },
+                            { code: "DA2561", name: "Ejercicio de la profesión", requisites: ["DA2312", "DA3411"] },
+                            { code: "DA2513", name: "Elementos de la Construcción III", requisites: ["DA1314", "DA2512"] },
+                            { code: "DA2123", name: "Expresión Digital III", requisites: ["DA2122"] },
+                            { code: "EG", name: "Estudios Generales", requisites: [] }
+                        ]
+                    },
+                    {
+                        name: "XI trimestre",
+                        subjects: [
+                            { code: "DA2314", name: "Diseño Arquitectónico VII", requisites: ["DA2313", "DA2412"] },
+                            { code: "DA2562", name: "Gerencia de Proyectos", requisites: ["DA2312", "DA2512"] },
+                            { code: "DA4541", name: "Paisajismo", requisites: ["DA2541"] },
+                            { code: "EG", name: "Estudios Generales", requisites: [] }
+                        ]
+                    },
+                    {
+                        name: "XII trimestre",
+                        subjects: [
+                            { code: "DA3311", name: "Diseño Arquitectónico VIII", requisites: ["DA2314", "MC3253", "DA2562"] },
+                            { code: "DA2563", name: "Gerencia de obras", requisites: ["DA2562"] },
+                            { code: "ELECT1", name: "Electiva I", requisites: ["DA2561"] },
+                            { code: "EG", name: "Estudios Generales", requisites: [] }
+                        ]
+                    }
+                ]
+            },
+            {
+                year: "Quinto Año",
+                trimesters: [
+                    {
+                        name: "XIII trimestre",
+                        subjects: [
+                            { code: "DA3312", name: "Diseño Arquitectónico IX", requisites: ["DA3311"] },
+                            { code: "ELECT2", name: "Electiva II", requisites: [] },
+                            { code: "ELECT3", name: "Electiva III", requisites: [] }
+                        ]
+                    },
+                    {
+                        name: "XIV trimestre",
+                        subjects: [
+                            { code: "DA3313", name: "Diseño Arquitectónico X", requisites: ["DA3312"] },
+                            { code: "EP1107", name: "Seminario", requisites: [] }
+                        ]
+                    },
+                    {
+                        name: "XV trimestre",
+                        subjects: [
+                            { code: "EP3307", name: "Proyecto de Grado a Dedicación Exclusiva", requisites: ["DA3313", "EP1107", "Perm. Coord."] }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // Cargar estado guardado desde localStorage
+        let approvedSubjects = JSON.parse(localStorage.getItem('approvedSubjects')) || [];
+
+        // Función para guardar el estado en localStorage
+        function saveProgress() {
+            localStorage.setItem('approvedSubjects', JSON.stringify(approvedSubjects));
+        }
+
+        // Función para verificar si una materia está aprobada
+        function isApproved(subjectCode) {
+            return approvedSubjects.includes(subjectCode);
+        }
+
+        // Función para verificar si los requisitos de una materia están cumplidos
+        function checkRequisites(requisites) {
+            // Caso especial para requisito de unidades aprobadas
+            if (requisites.includes("40 Unidades aprob.")) {
+                return approvedSubjects.length >= 10; // Aproximadamente 10 materias = 40 unidades
+            }
+            
+            // Caso especial para permiso de coordinación
+            if (requisites.includes("Perm. Coord.")) {
+                return false; // Siempre requiere intervención manual
+            }
+            
+            return requisites.every(req => approvedSubjects.includes(req));
+        }
+
+        // Función para renderizar la malla curricular
+        function renderCurriculum() {
+            const curriculumContainer = document.getElementById('curriculum');
+            curriculumContainer.innerHTML = '';
+
+            curriculumData.forEach(yearData => {
+                const yearElement = document.createElement('div');
+                yearElement.className = 'year';
+                
+                const yearTitle = document.createElement('h2');
+                yearTitle.className = 'year-title';
+                yearTitle.textContent = yearData.year;
+                yearElement.appendChild(yearTitle);
+                
+                const trimestersContainer = document.createElement('div');
+                trimestersContainer.className = 'trimesters';
+                
+                yearData.trimesters.forEach(trimester => {
+                    const trimesterElement = document.createElement('div');
+                    trimesterElement.className = 'trimester';
+                    
+                    const trimesterTitle = document.createElement('h3');
+                    trimesterTitle.className = 'trimester-title';
+                    trimesterTitle.textContent = trimester.name;
+                    trimesterElement.appendChild(trimesterTitle);
+                    
+                    trimester.subjects.forEach(subject => {
+                        const subjectElement = document.createElement('div');
+                        
+                        // Determinar el estado de la materia
+                        if (isApproved(subject.code)) {
+                            subjectElement.className = 'subject subject-approved';
+                        } else if (checkRequisites(subject.requisites)) {
+                            subjectElement.className = 'subject subject-pending';
+                        } else {
+                            subjectElement.className = 'subject subject-blocked';
+                            
+                            // Agregar tooltip para materias bloqueadas
+                            const tooltip = document.createElement('span');
+                            tooltip.className = 'tooltip';
+                            tooltip.textContent = `Requisitos: ${subject.requisites.join(', ')}`;
+                            subjectElement.appendChild(tooltip);
+                        }
+                        
+                        const subjectCode = document.createElement('div');
+                        subjectCode.className = 'subject-code';
+                        subjectCode.textContent = subject.code;
+                        
+                        const subjectName = document.createElement('div');
+                        subjectName.className = 'subject-name';
+                        subjectName.textContent = subject.name;
+                        
+                        subjectElement.appendChild(subjectCode);
+                        subjectElement.appendChild(subjectName);
+                        
+                        // Agregar requisitos si existen
+                        if (subject.requisites.length > 0) {
+                            const requisitesElement = document.createElement('div');
+                            requisitesElement.className = 'subject-requisites';
+                            requisitesElement.textContent = `Requisitos: ${subject.requisites.join(', ')}`;
+                            subjectElement.appendChild(requisitesElement);
+                        }
+                        
+                        // Agregar evento de clic solo si no está bloqueada
+                        if (!subjectElement.classList.contains('subject-blocked')) {
+                            subjectElement.addEventListener('click', () => {
+                                toggleSubject(subject.code);
+                            });
+                        }
+                        
+                        trimesterElement.appendChild(subjectElement);
+                    });
+                    
+                    trimestersContainer.appendChild(trimesterElement);
+                });
+                
+                yearElement.appendChild(trimestersContainer);
+                curriculumContainer.appendChild(yearElement);
+            });
+        }
+
+        // Función para alternar el estado de una materia
+        function toggleSubject(subjectCode) {
+            if (approvedSubjects.includes(subjectCode)) {
+                approvedSubjects = approvedSubjects.filter(code => code !== subjectCode);
+            } else {
+                approvedSubjects.push(subjectCode);
+            }
+            
+            saveProgress();
+            renderCurriculum();
+        }
+
+        // Inicializar la malla curricular
+        renderCurriculum();
+    </script>
+</body>
+</html>
